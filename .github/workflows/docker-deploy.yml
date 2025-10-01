@@ -16,7 +16,7 @@ on:
 
 env:
   REGISTRY: gcr.io
-  PROJECT_ID: postiz-mcp-20250929
+  PROJECT_ID: postiz-473617
   REGION: us-central1
 
 jobs:
@@ -31,14 +31,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ env.PROJECT_ID }}
 
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
       - name: Configure Docker to use gcloud as a credential helper
-        run: gcloud auth configure-docker
+        run: |
+          gcloud auth configure-docker
+          gcloud auth configure-docker gcr.io
 
       - name: Build Docker image
         run: |
