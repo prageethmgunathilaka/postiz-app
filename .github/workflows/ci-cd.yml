@@ -13,7 +13,7 @@ on:
 
 env:
   REGISTRY: gcr.io
-  PROJECT_ID: postiz-mcp-20250929
+  PROJECT_ID: postiz-473617
   REGION: us-central1
   SERVICE_NAME: postiz
 
