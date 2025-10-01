@@ -1,0 +1,77 @@
+swagger: "2.0"
+info:
+  title: Postiz Backend API
+  version: "1.0.0"
+  description: "API Gateway for Postiz Backend with API key authentication"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "x-api-key"
+    in: "header"
+    description: "API key for authentication"
+security:
+  - api_key: []
+paths:
+  /mcp/{api}/sse:
+    get:
+      operationId: "mcpSse"
+      summary: "MCP Server-Sent Events endpoint"
+      x-google-backend:
+        address: https://postiz-backend-1025161041601.us-central1.run.app
+      parameters:
+        - name: api
+          in: path
+          required: true
+          type: string
+          description: "API key for MCP connection"
+      responses:
+        '200':
+          description: "Success"
+        '401':
+          description: "Unauthorized - Invalid API key"
+        '403':
+          description: "Forbidden"
+  /mcp/{api}/messages:
+    post:
+      operationId: "mcpMessages"
+      summary: "MCP Messages endpoint"
+      x-google-backend:
+        address: https://postiz-backend-1025161041601.us-central1.run.app
+      parameters:
+        - name: api
+          in: path
+          required: true
+          type: string
+          description: "API key for MCP connection"
+      responses:
+        '200':
+          description: "Success"
+        '401':
+          description: "Unauthorized - Invalid API key"
+        '403':
+          description: "Forbidden"
+  /:
+    get:
+      operationId: "rootGet"
+      summary: "Proxy root GET requests to backend"
+      x-google-backend:
+        address: https://postiz-backend-1025161041601.us-central1.run.app
+      responses:
+        '200':
+          description: "Success"
+        '401':
+          description: "Unauthorized - Invalid API key"
+        '403':
+          description: "Forbidden"
+    post:
+      operationId: "rootPost"
+      summary: "Proxy root POST requests to backend"
+      x-google-backend:
+        address: https://postiz-backend-1025161041601.us-central1.run.app
+      responses:
+        '200':
+          description: "Success"
+        '401':
+          description: "Unauthorized - Invalid API key"
+        '403':
+          description: "Forbidden"

@@ -1,0 +1,37 @@
+# Backend Dockerfile for Cloud Run
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/backend/package.json ./apps/backend/
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy source code (needed for postinstall script)
+COPY . .
+
+# Remove .env file to prevent conflicts with Cloud Run environment variables
+RUN rm -f .env
+
+# Install dependencies
+RUN pnpm install --no-frozen-lockfile
+
+# Build the application
+RUN pnpm run build:backend
+
+# Expose port (Cloud Run will set PORT env var)
+EXPOSE 3001
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3001
+ENV DATABASE_URL="postgresql://postiz-user:PostizMCP2025!@34.58.7.151:5432/postiz-db"
+ENV REDIS_URL="redis://10.169.95.155:6379"
+ENV FRONTEND_URL="https://postiz-frontend-1025161041601.us-central1.run.app"
+
+# Start the application (override the dotenv command)
+CMD ["node", "./apps/backend/dist/apps/backend/src/main.js"]

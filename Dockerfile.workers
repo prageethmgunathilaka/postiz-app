@@ -1,0 +1,40 @@
+# Workers Dockerfile for Cloud Run
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/workers/package.json ./apps/workers/
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy source code (needed for postinstall script)
+COPY . .
+
+# Create .env file with environment variables for dotenv
+RUN echo "NODE_ENV=production" > .env && \
+    echo "DATABASE_URL=postgresql://postiz-user:PostizMCP2025!@34.58.7.151:5432/postiz-db" >> .env && \
+    echo "REDIS_URL=redis://10.169.95.155:6379" >> .env && \
+    echo "FRONTEND_URL=https://postiz-frontend-1025161041601.us-central1.run.app" >> .env
+
+# Install dependencies
+RUN pnpm install --no-frozen-lockfile
+
+# Build the application
+RUN pnpm run build:workers
+
+# Expose port (Cloud Run will set PORT env var)
+EXPOSE 3003
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3003
+ENV DATABASE_URL="postgresql://postiz-user:PostizMCP2025!@34.58.7.151:5432/postiz-db"
+ENV REDIS_URL="redis://10.169.95.155:6379"
+ENV FRONTEND_URL="https://postiz-frontend-1025161041601.us-central1.run.app"
+
+# Start the application
+CMD ["pnpm", "run", "start:prod:workers"]

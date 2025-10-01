@@ -22,9 +22,15 @@ class MockRedis {
 }
 
 // Use real Redis if REDIS_URL is defined, otherwise use MockRedis
-export const ioRedis = process.env.REDIS_URL
-  ? new Redis(process.env.REDIS_URL, {
-      maxRetriesPerRequest: null,
-      connectTimeout: 10000,
-    })
-  : (new MockRedis() as unknown as Redis); // Type cast to Redis to maintain interface compatibility
+const createRedisClient = () => {
+  const client = process.env.REDIS_URL
+    ? new Redis(process.env.REDIS_URL, {
+        maxRetriesPerRequest: null,
+        connectTimeout: 10000,
+      })
+    : (new MockRedis() as unknown as Redis);
+
+  return client;
+};
+
+export const ioRedis = createRedisClient();

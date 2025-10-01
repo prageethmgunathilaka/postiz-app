@@ -1,0 +1,37 @@
+# Frontend Dockerfile for Cloud Run
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/frontend/package.json ./apps/frontend/
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy source code (needed for postinstall script)
+COPY . .
+
+# Remove .env file to prevent conflicts with Cloud Run environment variables
+RUN rm -f .env
+
+# Install dependencies
+RUN pnpm install --no-frozen-lockfile
+
+# Build the application
+RUN pnpm run build:frontend
+
+# Change to frontend directory
+WORKDIR /app/apps/frontend
+
+# Expose port (Cloud Run will set PORT env var)
+EXPOSE 3000
+
+# Set environment variables
+ENV PORT=3000
+ENV NEXT_PUBLIC_BACKEND_URL="https://postiz-backend-1025161041601.us-central1.run.app"
+
+# Start the application (use Next.js start command)
+CMD ["npx", "next", "start", "-p", "3000"]
