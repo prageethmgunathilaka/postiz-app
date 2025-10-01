@@ -14,8 +14,16 @@ RUN npm install -g pnpm
 # Copy source code (needed for postinstall script)
 COPY . .
 
-# Remove .env file to prevent conflicts with Cloud Run environment variables
-RUN rm -f .env
+# Create .env file with environment variables for dotenv
+RUN echo "NODE_ENV=production" > .env && \
+    echo "PORT=3001" >> .env && \
+    echo "DATABASE_URL=postgresql://postiz-user:PostizMCP2025!@34.58.7.151:5432/postiz-db" >> .env && \
+    echo "REDIS_URL=redis://10.169.95.155:6379" >> .env && \
+    echo "FRONTEND_URL=https://postiz-frontend-1025161041601.us-central1.run.app" >> .env && \
+    echo "MAIN_URL=https://postiz-frontend-1025161041601.us-central1.run.app" >> .env && \
+    echo "JWT_SECRET=your-jwt-secret-key-here" >> .env && \
+    echo "GITHUB_CLIENT_ID=Ov23liGW2IXy2y8G66Ej" >> .env && \
+    echo "GITHUB_CLIENT_SECRET=a0aa109a2026596ef7a8b2be481ed81c01add68e" >> .env
 
 # Install dependencies
 RUN pnpm install --no-frozen-lockfile
@@ -32,6 +40,8 @@ ENV PORT=3001
 ENV DATABASE_URL="postgresql://postiz-user:PostizMCP2025!@34.58.7.151:5432/postiz-db"
 ENV REDIS_URL="redis://10.169.95.155:6379"
 ENV FRONTEND_URL="https://postiz-frontend-1025161041601.us-central1.run.app"
+ENV MAIN_URL="https://postiz-frontend-1025161041601.us-central1.run.app"
+ENV JWT_SECRET="your-jwt-secret-key-here"
 
 # Start the application (override the dotenv command)
 CMD ["node", "./apps/backend/dist/apps/backend/src/main.js"]
