@@ -41,27 +41,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          # Set production environment variables
-          export NODE_ENV=production
-          export PORT=3001
-          export FRONTEND_URL=https://frontend-${{ env.PROJECT_ID }}-uc.a.run.app
-          export MAIN_URL=https://frontend-${{ env.PROJECT_ID }}-uc.a.run.app
-          export NEXT_PUBLIC_BACKEND_URL=https://backend-${{ env.PROJECT_ID }}-uc.a.run.app
-          export BACKEND_INTERNAL_URL=https://backend-${{ env.PROJECT_ID }}-uc.a.run.app
-          
-          # Build and push image
+          # Build and push image (Dockerfiles are self-contained with hardcoded env vars)
           docker build -f Dockerfile.${{ matrix.service }} \
-            --build-arg NODE_ENV=$NODE_ENV \
-            --build-arg PORT=$PORT \
-            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-            --build-arg REDIS_URL="${{ secrets.REDIS_URL }}" \
-            --build-arg JWT_SECRET="${{ secrets.JWT_SECRET }}" \
-            --build-arg FRONTEND_URL=$FRONTEND_URL \
-            --build-arg MAIN_URL=$MAIN_URL \
-            --build-arg NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL \
-            --build-arg BACKEND_INTERNAL_URL=$BACKEND_INTERNAL_URL \
-            --build-arg TZ=UTC \
-            --build-arg STORAGE_PROVIDER=local \
             -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/postiz-${{ matrix.service }}:${{ github.sha }} \
             -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/postiz-${{ matrix.service }}:latest \
             .
@@ -87,31 +68,23 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |
-          # Set production environment variables
-          export NODE_ENV=production
-          export PORT=3001
-          export FRONTEND_URL=https://frontend-${{ env.PROJECT_ID }}-uc.a.run.app
-          export MAIN_URL=https://frontend-${{ env.PROJECT_ID }}-uc.a.run.app
-          export NEXT_PUBLIC_BACKEND_URL=https://backend-${{ env.PROJECT_ID }}-uc.a.run.app
-          export BACKEND_INTERNAL_URL=https://backend-${{ env.PROJECT_ID }}-uc.a.run.app
-          export OAUTH_GITHUB_CLIENT_ID="${{ secrets.OAUTH_GITHUB_CLIENT_ID }}"
-          export OAUTH_GITHUB_CLIENT_SECRET="${{ secrets.OAUTH_GITHUB_CLIENT_SECRET }}"
-          
-          # Deploy to Cloud Run
+          # Deploy to Cloud Run with environment variables that override Dockerfile defaults
           gcloud run deploy ${{ matrix.service }} \
             --image ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/postiz-${{ matrix.service }}:${{ github.sha }} \
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated \
-            --port $PORT \
-            --set-env-vars "NODE_ENV=$NODE_ENV,PORT=$PORT,TZ=UTC,STORAGE_PROVIDER=local" \
-            --set-env-vars "FRONTEND_URL=$FRONTEND_URL,MAIN_URL=$MAIN_URL" \
-            --set-env-vars "NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL,BACKEND_INTERNAL_URL=$BACKEND_INTERNAL_URL" \
+            --port 3001 \
+            --set-env-vars "NODE_ENV=production,PORT=3001,TZ=UTC,STORAGE_PROVIDER=local" \
+            --set-env-vars "FRONTEND_URL=https://frontend-${{ env.PROJECT_ID }}-uc.a.run.app" \
+            --set-env-vars "MAIN_URL=https://frontend-${{ env.PROJECT_ID }}-uc.a.run.app" \
+            --set-env-vars "NEXT_PUBLIC_BACKEND_URL=https://backend-${{ env.PROJECT_ID }}-uc.a.run.app" \
+            --set-env-vars "BACKEND_INTERNAL_URL=https://backend-${{ env.PROJECT_ID }}-uc.a.run.app" \
             --set-env-vars "DATABASE_URL=${{ secrets.DATABASE_URL }}" \
             --set-env-vars "REDIS_URL=${{ secrets.REDIS_URL }}" \
             --set-env-vars "JWT_SECRET=${{ secrets.JWT_SECRET }}" \
-            --set-env-vars "OAUTH_GITHUB_CLIENT_ID=$OAUTH_GITHUB_CLIENT_ID" \
-            --set-env-vars "OAUTH_GITHUB_CLIENT_SECRET=$OAUTH_GITHUB_CLIENT_SECRET"
+            --set-env-vars "GITHUB_CLIENT_ID=${{ secrets.OAUTH_GITHUB_CLIENT_ID }}" \
+            --set-env-vars "GITHUB_CLIENT_SECRET=${{ secrets.OAUTH_GITHUB_CLIENT_SECRET }}"
 
   # Health check after deployment
   health-check:
