@@ -99,7 +99,7 @@ jobs:
           find . -name "package.json" -type f
           
           # Install dependencies
-          pnpm install
+          pnpm install --no-frozen-lockfile
           
           # Push database schema
           pnpm run prisma-db-push

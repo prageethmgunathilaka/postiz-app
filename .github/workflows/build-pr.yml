@@ -52,7 +52,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd postiz-app
-          pnpm install
+          pnpm install --no-frozen-lockfile
 
       - name: Build
         run: |
