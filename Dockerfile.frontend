@@ -27,11 +27,10 @@ RUN pnpm run build:frontend
 WORKDIR /app/apps/frontend
 
 # Expose port (Cloud Run will set PORT env var)
-EXPOSE 3000
+EXPOSE $PORT
 
 # Set environment variables
-ENV PORT=3000
 ENV NEXT_PUBLIC_BACKEND_URL="https://postiz-backend-1025161041601.us-central1.run.app"
 
-# Start the application (use Next.js start command)
-CMD ["npx", "next", "start", "-p", "3000"]
+# Start the application (use Next.js start command with dynamic port)
+CMD ["sh", "-c", "npx next start -p $PORT"]

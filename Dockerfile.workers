@@ -27,11 +27,10 @@ RUN pnpm install --no-frozen-lockfile
 RUN pnpm run build:workers
 
 # Expose port (Cloud Run will set PORT env var)
-EXPOSE 3003
+EXPOSE $PORT
 
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT=3003
 ENV DATABASE_URL="postgresql://postiz-user:PostizMCP2025!@34.58.7.151:5432/postiz-db"
 ENV REDIS_URL="redis://10.169.95.155:6379"
 ENV FRONTEND_URL="https://postiz-frontend-1025161041601.us-central1.run.app"

@@ -83,7 +83,7 @@ jobs:
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated \
-            --port 3001 \
+            --port ${{ matrix.service == 'frontend' && '3000' || matrix.service == 'backend' && '3001' || '3003' }} \
             --set-env-vars "NODE_ENV=production,TZ=UTC,STORAGE_PROVIDER=local" \
             --set-env-vars "FRONTEND_URL=https://frontend-${{ env.PROJECT_ID }}-uc.a.run.app" \
             --set-env-vars "MAIN_URL=https://frontend-${{ env.PROJECT_ID }}-uc.a.run.app" \
