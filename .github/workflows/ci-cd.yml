@@ -79,11 +79,22 @@ jobs:
 
       - name: Setup Database Schema (Backend only)
         if: matrix.service == 'backend'
+        working-directory: .
         run: |
           # Install Node.js and pnpm
           curl -fsSL https://get.pnpm.io/install.sh | sh -
           export PNPM_HOME="$HOME/.local/share/pnpm"
           export PATH="$PNPM_HOME:$PATH"
+          
+          # Verify we're in the right directory and package.json exists
+          pwd
+          ls -la
+          if [ ! -f "package.json" ]; then
+            echo "package.json not found in current directory"
+            echo "Looking for package.json in parent directories..."
+            find . -name "package.json" -type f
+            exit 1
+          fi
           
           # Install dependencies
           pnpm install
