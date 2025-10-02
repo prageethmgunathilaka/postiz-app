@@ -5,4 +5,13 @@ export class RootController {
   getRoot(): string {
     return 'App is running!';
   }
+
+  @Get('/health')
+  getHealth() {
+    return {
+      status: 'ok',
+      service: 'backend',
+      timestamp: new Date().toISOString(),
+    };
+  }
 }
