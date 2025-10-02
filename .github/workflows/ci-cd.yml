@@ -2,7 +2,7 @@ name: Docker Deployment Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   workflow_dispatch:
     inputs:
       services:
