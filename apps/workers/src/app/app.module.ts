@@ -6,10 +6,11 @@ import { BullMqModule } from '@gitroom/nestjs-libraries/bull-mq-transport-new/bu
 import { PlugsController } from '@gitroom/workers/app/plugs.controller';
 import { SentryModule } from '@sentry/nestjs/setup';
 import { FILTER } from '@gitroom/nestjs-libraries/sentry/sentry.exception';
+import { HealthController } from './health.controller';
 
 @Module({
   imports: [SentryModule.forRoot(), DatabaseModule, BullMqModule],
-  controllers: [PostsController, PlugsController],
+  controllers: [PostsController, PlugsController, HealthController],
   providers: [FILTER],
 })
 export class AppModule {}
