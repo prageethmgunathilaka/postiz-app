@@ -68,6 +68,11 @@ jobs:
       matrix:
         service: [backend, frontend, workers]
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: postiz-app
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
