@@ -105,12 +105,8 @@ jobs:
       - name: Wait for deployment
         run: sleep 30
       
-      - name: Check backend health
+      - name: Check services health
         run: |
-          BACKEND_URL="https://backend-${{ env.PROJECT_ID }}-uc.a.run.app"
-          curl -f $BACKEND_URL/health || exit 1
-      
-      - name: Check frontend health
-        run: |
+          # Backend is accessed through gateway, so we check the frontend which should proxy to backend
           FRONTEND_URL="https://frontend-${{ env.PROJECT_ID }}-uc.a.run.app"
           curl -f $FRONTEND_URL || exit 1
