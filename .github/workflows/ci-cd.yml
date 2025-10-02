@@ -88,7 +88,6 @@ jobs:
           
           # Push database schema
           pnpm run prisma-db-push
-        working-directory: ./postiz-app
 
       - name: Deploy to Cloud Run
         run: |
