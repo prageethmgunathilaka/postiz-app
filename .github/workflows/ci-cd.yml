@@ -31,7 +31,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          path: .
+          path: postiz-app
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -84,6 +84,9 @@ jobs:
           curl -fsSL https://get.pnpm.io/install.sh | sh -
           export PNPM_HOME="$HOME/.local/share/pnpm"
           export PATH="$PNPM_HOME:$PATH"
+          
+          # Change to the correct directory
+          cd postiz-app
           
           # Check current directory and find package.json
           pwd

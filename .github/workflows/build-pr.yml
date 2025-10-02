@@ -21,7 +21,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-          path: .
+          path: postiz-app
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -50,10 +50,14 @@ jobs:
             ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}-
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          cd postiz-app
+          pnpm install
 
       - name: Build
-        run: pnpm run build
+        run: |
+          cd postiz-app
+          pnpm run build
 
       - name: Get Commit SHA (short)
         id: get_version
