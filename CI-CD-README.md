@@ -36,22 +36,18 @@ This repository now includes a comprehensive CI/CD pipeline that automates testi
 - ✅ Jest test suite with coverage
 - ✅ Upload test artifacts
 
-### 2. **Build Images** (Push to main/develop)
+### 2. **Build Images** (Push to main)
 - 🐳 Build Docker images for all services
 - 📦 Push to Google Container Registry
 - 🏷️ Tag with commit SHA and latest
 
-### 3. **Deploy Staging** (Push to develop)
-- 🚀 Deploy all services to staging environment
-- 🔧 Configure staging-specific environment variables
-- 🌐 Set up staging service URLs
-
-### 4. **Deploy Production** (Push to main)
+### 3. **Deploy Production** (Push to main)
 - 🚀 Deploy all services to production environment
 - 🔐 Use production secrets and configuration
 - 🌐 Set up production service URLs
+- 🗄️ Run database schema updates
 
-### 5. **Health Checks** (Post-deployment)
+### 4. **Health Checks** (Post-deployment)
 - 🔍 Verify all services are responding
 - 📊 Report deployment status
 - 📝 Generate deployment summary
@@ -102,14 +98,11 @@ This repository now includes a comprehensive CI/CD pipeline that automates testi
 ### Using Scripts
 
 ```bash
-# Deploy to staging
-./scripts/deploy.sh --environment staging
-
 # Deploy to production
 ./scripts/deploy.sh --environment production
 
 # Deploy specific services
-./scripts/deploy.sh --environment staging --services backend,frontend
+./scripts/deploy.sh --environment production --services backend,frontend
 
 # Deploy with specific tag
 ./scripts/deploy.sh --environment production --tag v1.2.3
@@ -147,11 +140,6 @@ This repository now includes a comprehensive CI/CD pipeline that automates testi
 - **Logs**: `gcloud logging read "resource.type=cloud_run_revision" --limit=50`
 
 ### Health Check URLs
-
-**Staging:**
-- Backend: https://postiz-backend-staging-1025161041601.us-central1.run.app
-- Frontend: https://postiz-frontend-staging-1025161041601.us-central1.run.app
-- Workers: https://postiz-workers-staging-1025161041601.us-central1.run.app
 
 **Production:**
 - Backend: https://postiz-backend-1025161041601.us-central1.run.app
@@ -200,11 +188,10 @@ gcloud run deploy postiz-backend \
 
 ### Branch Strategy
 - **`main`**: Production-ready code
-- **`develop`**: Integration branch for staging
 - **Feature branches**: Individual features
 
 ### Deployment Strategy
-- **Staging First**: Always test in staging before production
+- **Direct Production**: Deploy directly to production from main branch
 - **Rollback Plan**: Keep previous image tags for quick rollback
 - **Health Checks**: Verify deployments before marking complete
 
@@ -225,12 +212,11 @@ gcloud run deploy postiz-backend \
 
 When contributing to this project:
 
-1. **Create a feature branch** from `develop`
+1. **Create a feature branch** from `main`
 2. **Make your changes** and ensure tests pass
-3. **Create a pull request** to `develop`
+3. **Create a pull request** to `main`
 4. **Wait for CI checks** to pass
-5. **Merge to develop** for staging deployment
-6. **Merge to main** for production deployment
+5. **Merge to main** for production deployment
 
 ## 📞 Support
 
@@ -243,4 +229,4 @@ For issues with the CI/CD pipeline:
 
 ---
 
-**🎉 Your CI/CD pipeline is now ready! Push to `develop` or `main` to see it in action.**
+**🎉 Your CI/CD pipeline is now ready! Push to `main` to see it in action.**

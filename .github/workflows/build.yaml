@@ -60,11 +60,12 @@ jobs:
           echo "Commit SHA is $VERSION"
           echo "tag=$VERSION" >> $GITHUB_OUTPUT
       
-      - name: SonarQube Analysis (Branch)
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with: 
-          args: >
-            -Dsonar.projectVersion=${{ steps.get_version.outputs.tag }}
+      # SonarQube Analysis disabled - uncomment below to enable
+      # - name: SonarQube Analysis (Branch)
+      #   uses: SonarSource/sonarqube-scan-action@v6
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      #   with: 
+      #     args: >
+      #       -Dsonar.projectVersion=${{ steps.get_version.outputs.tag }}
