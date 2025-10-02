@@ -21,6 +21,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+          path: .
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
