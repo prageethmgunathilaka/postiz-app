@@ -10,21 +10,15 @@ initializeSentry('workers');
 async function bootstrap() {
   process.env.IS_WORKER = 'true';
 
-  // Create HTTP application for Cloud Run
-  const app = await NestFactory.create(AppModule);
-  
-  // Also create microservice for BullMQ
-  const microservice = app.connectMicroservice<MicroserviceOptions>({
+  // Create microservice application for Cloud Run Jobs
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     strategy: new BullMqServer(),
   });
 
-  // Start both HTTP server and microservice
-  await app.startAllMicroservices();
+  // Start the microservice
+  await app.listen();
   
-  const port = process.env.PORT || 3003;
-  await app.listen(port);
-  
-  console.log(`Workers service is running on port ${port}`);
+  console.log('Workers job is running and listening for BullMQ messages');
 }
 
 bootstrap();

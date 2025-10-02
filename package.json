@@ -29,6 +29,7 @@
     "start:prod:backend": "pnpm --filter ./apps/backend run start",
     "start:prod:frontend": "pnpm --filter ./apps/frontend run start",
     "start:prod:workers": "pnpm --filter ./apps/workers run start",
+    "job:workers": "pnpm --filter ./apps/workers run start",
     "start:prod:cron": "pnpm --filter ./apps/cron run start",
     "dev:docker": "docker compose -f ./docker-compose.dev.yaml up -d",
     "commands:build:development": "pnpm --filter ./apps/commands run build",

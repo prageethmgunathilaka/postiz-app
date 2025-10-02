@@ -1,4 +1,4 @@
-# Workers Dockerfile for Cloud Run
+# Workers Dockerfile for Cloud Run Jobs
 FROM node:20-alpine
 
 # Set working directory
@@ -26,14 +26,11 @@ RUN pnpm install --no-frozen-lockfile
 # Build the application
 RUN pnpm run build:workers
 
-# Expose port (Cloud Run will set PORT env var)
-EXPOSE $PORT
-
 # Set environment variables
 ENV NODE_ENV=production
 ENV DATABASE_URL="postgresql://postiz-user:PostizMCP2025!@34.58.7.151:5432/postiz-db"
 ENV REDIS_URL="redis://10.169.95.155:6379"
 ENV FRONTEND_URL="https://postiz-frontend-1025161041601.us-central1.run.app"
 
-# Start the application
+# Start the job (no port needed for Cloud Run Jobs)
 CMD ["pnpm", "run", "start:prod:workers"]
