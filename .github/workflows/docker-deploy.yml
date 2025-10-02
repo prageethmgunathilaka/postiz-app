@@ -116,7 +116,7 @@ jobs:
                 --memory 1Gi \
                 --cpu 1 \
                 --max-instances 10 \
-                --set-env-vars NODE_ENV=production,FRONTEND_URL=https://postiz-frontend-1025161041601.us-central1.run.app,GITHUB_CLIENT_ID=${{ secrets.GITHUB_CLIENT_ID }},GITHUB_CLIENT_SECRET=${{ secrets.GITHUB_CLIENT_SECRET }} \
+                --set-env-vars NODE_ENV=production,FRONTEND_URL=https://postiz-frontend-1025161041601.us-central1.run.app,GITHUB_CLIENT_ID=${{ secrets.OAUTH_GITHUB_CLIENT_ID }},GITHUB_CLIENT_SECRET=${{ secrets.OAUTH_GITHUB_CLIENT_SECRET }} \
                 --quiet
               ;;
             frontend)
