@@ -47,9 +47,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+        working-directory: ./postiz-app
 
       - name: Build
         run: pnpm run build
+        working-directory: ./postiz-app
 
       - name: Get Commit SHA (short)
         id: get_version

@@ -25,13 +25,28 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'
+                sh '''
+                    # Install pnpm
+                    curl -fsSL https://get.pnpm.io/install.sh | sh -
+                    export PNPM_HOME="$HOME/.local/share/pnpm"
+                    export PATH="$PNPM_HOME:$PATH"
+                    
+                    # Install dependencies
+                    pnpm install
+                '''
             }
         }
 
         stage('Build Project') {
             steps {
-                sh 'npm run build'
+                sh '''
+                    # Set up pnpm
+                    export PNPM_HOME="$HOME/.local/share/pnpm"
+                    export PATH="$PNPM_HOME:$PATH"
+                    
+                    # Build project
+                    pnpm run build
+                '''
             }
         }
         
