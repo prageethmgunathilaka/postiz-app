@@ -38,13 +38,17 @@ export class GithubProvider implements ProvidersInterface {
       })
     ).json();
 
-    const [{ email }] = await (
+    const emails = await (
       await fetch('https://api.github.com/user/emails', {
         headers: {
           Authorization: `token ${access_token}`,
         },
       })
     ).json();
+
+    // Find the primary email or use the first one
+    const primaryEmail = emails.find((email: any) => email.primary) || emails[0];
+    const email = primaryEmail?.email || data.email;
 
     return {
       email: email,

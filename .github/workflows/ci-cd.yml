@@ -75,6 +75,20 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
+      - name: Setup Database Schema (Backend only)
+        if: matrix.service == 'backend'
+        run: |
+          # Install Node.js and pnpm
+          curl -fsSL https://get.pnpm.io/install.sh | sh -
+          export PNPM_HOME="$HOME/.local/share/pnpm"
+          export PATH="$PNPM_HOME:$PATH"
+          
+          # Install dependencies
+          pnpm install
+          
+          # Push database schema
+          pnpm run prisma-db-push
+
       - name: Deploy to Cloud Run
         run: |
           # Deploy to Cloud Run with environment variables that override Dockerfile defaults
