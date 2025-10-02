@@ -50,10 +50,10 @@ jobs:
       - name: Build and push Docker image
         run: |
           # Build and push image (Dockerfiles are self-contained with hardcoded env vars)
-          docker build -f Dockerfile.${{ matrix.service }} \
+          docker build -f postiz-app/Dockerfile.${{ matrix.service }} \
             -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/postiz-${{ matrix.service }}:${{ github.sha }} \
             -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/postiz-${{ matrix.service }}:latest \
-            .
+            postiz-app/
           
           docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/postiz-${{ matrix.service }}:${{ github.sha }}
           docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/postiz-${{ matrix.service }}:latest
